@@ -1,0 +1,403 @@
+# italian_test.yaml
+
+"Grammar & Verb Conjugation":
+  "Livello Base (A1-A2)":
+    - prompt: "Qual è il plurale di 'ragazzo'?"
+      acceptable_answers:
+        1: "Ragazzi"
+      scoring_criteria:
+        - "correct plural form"
+        - "spelling accuracy"
+      max_score: 1
+
+    - prompt: "La donna → Le _____"
+      acceptable_answers:
+        1: "donne"
+      scoring_criteria:
+        - "correct plural form"
+        - "spelling accuracy"
+      max_score: 1
+
+    - prompt: "Completa con il verbo al passato prossimo: Ieri io ______ (andare) al cinema."
+      acceptable_answers:
+        1: "sono andato"
+        2: "sono andato/a"
+        3: "Ieri io sono andato/a al cinema"
+      scoring_criteria:
+        "correct auxiliary": 1
+        "correct participle": 1
+      max_score: 2
+
+    - prompt: "Scegli l'articolo corretto: ____ zaino è sul tavolo. (Il/Lo/La)"
+      acceptable_answers:
+        1: "Lo"
+        2: "Lo zaino"
+        3: "Lo zaino è sul tavolo"
+      scoring_criteria:
+        - "correct article choice"
+        - "proper agreement"
+      max_score: 1
+
+    - prompt: "Inserisci la preposizione corretta: Vado ____ Roma ____ treno."
+      acceptable_answers:
+        1: "a, in"
+        2: "Vado a Roma in treno"
+      scoring_criteria:
+        "correct first preposition": 1
+        "correct second preposition": 1
+      max_score: 2
+
+  "Livello Intermedio (B1-B2)":
+    - prompt: "Coniuga il verbo 'mangiare' al presente indicativo:"
+      acceptable_answers:
+        1: "mangio, mangi, mangia, mangiamo, mangiate, mangiano"
+        2: "Io mangio, tu mangi, lui/lei mangia, noi mangiamo, voi mangiate, loro mangiano"
+        3: "io mangio, tu mangi, egli/ella mangia, noi mangiamo, voi mangiate, essi/esse mangiano"
+      scoring_criteria:
+        "all forms correct": 2
+        "proper punctuation": 1
+      max_score: 3
+
+    - prompt: "Scrivi una frase con il verbo 'andare' al passato remoto."
+      acceptable_answers:
+        1: "Andai"
+        2: "Andai al mercato"
+        3: "Andai al mercato ieri mattina"
+      scoring_criteria:
+        "correct verb form": 1.5
+        "appropriate context": 1
+        "proper sentence structure": 0.5
+      max_score: 3
+
+    - prompt: "Come si forma il plurale delle parole che finiscono in -cia e -gia?"
+      acceptable_answers:
+        1: "Se i atona cade, se tonica rimane"
+        2: "Se la i è atona, cade nel plurale. Se è tonica, rimane"
+        3: "Se la i è atona, cade nel plurale (provincia → province). Se è tonica, rimane (farmacia → farmacie)"
+      scoring_criteria:
+        "explains atonic rule": 1
+        "explains tonic rule": 1
+        "provides examples": 1
+      max_score: 3
+
+  "Livello Avanzato (C1-C2)":
+    - prompt: "Completa la frase con il congiuntivo imperfetto: Se (potere) ______, (andare) ______ in vacanza più spesso."
+      acceptable_answers:
+        1: "potessi, andrei"
+        2: "Se potessi, andrei"
+        3: "Se potessi, andrei in vacanza più spesso"
+      scoring_criteria:
+        "correct congiuntivo": 1.5
+        "correct condizionale": 1.5
+      max_score: 3
+
+    - prompt: "Correggi l'errore nell'uso del gerundio: Arrivando a casa, ho dimenticato le chiavi."
+      acceptable_answers:
+        1: "Quando sono arrivato a casa, ho dimenticato le chiavi"
+        2: "Arrivato a casa, ho dimenticato le chiavi"
+      scoring_criteria:
+        "identifies error": 1
+        "correct temporal construction": 1
+        "maintains meaning": 1
+      max_score: 3
+
+"Vocabulary & Word Usage":
+  "Livello Base (A1-A2)":
+    - prompt: "Trova l'intruso: mela, pera, carota, arancia, banana"
+      acceptable_answers:
+        1: "carota"
+        2: "carota (è una verdura)"
+        3: "carota (è una verdura, le altre sono frutti)"
+      scoring_criteria:
+        "correct answer": 1
+        "explains category difference": 1
+      max_score: 2
+
+    - prompt: "Elenca 5 parole del campo semantico 'cucina'"
+      acceptable_answers:
+        1: "fornello, pentola, padella, mestolo, frigorifero"
+        2: "cucina, tavolo, forno, lavandino, frigo"
+        3: "fornello, pentola, padella, mestolo, frigorifero; sono tutti utensili da cucina"
+      scoring_criteria:
+        "relevant words": 2
+        "variety of items": 1
+      max_score: 3
+
+  "Livello Intermedio (B1-B2)":
+    - prompt: "Spiega la differenza tra 'qualche' e 'alcuni'"
+      acceptable_answers:
+        1: "qualche: singolare, alcuni: plurale"
+        2: "qualche è singolare e pochi, alcuni è plurale e più numerosi"
+        3: "'Qualche' è singolare e indica una quantità indefinita piccola. 'Alcuni' è plurale e indica una quantità maggiore."
+      scoring_criteria:
+        "explains number": 1
+        "explains quantity difference": 1
+        "provides clear distinction": 1
+      max_score: 3
+
+    - prompt: "Forma il diminutivo e l'accrescitivo di: casa, libro, gatto"
+      acceptable_answers:
+        1: "casetta/casona, libretto/librone, gattino/gattone"
+        2: "casa → casetta/casona, libro → libretto/librone, gatto → gattino/gattone"
+      scoring_criteria:
+        "correct diminutives": 1.5
+        "correct augmentatives": 1.5
+      max_score: 3
+
+  "Livello Avanzato (C1-C2)":
+    - prompt: "Spiega la sfumatura di significato tra: guardare, osservare, fissare"
+      acceptable_answers:
+        1: "guardare: vedere, osservare: studiare, fissare: guardare intensamente"
+        2: "guardare è vedere in generale, osservare è guardare con attenzione, fissare è guardare intensamente"
+        3: "Guardare è l'atto generale di vedere, osservare implica attenzione e studio, fissare indica uno sguardo intenso e prolungato"
+      scoring_criteria:
+        "explains basic meaning": 1
+        "captures nuances": 2
+        "provides context": 1
+      max_score: 4
+
+"Reading Comprehension":
+  "Livello Base (A1-A2)":
+    - prompt: "Mario è andato al mercato per comprare delle mele, ma ha dimenticato il portafoglio. È riuscito a comprare le mele?"
+      acceptable_answers:
+        1: "No"
+        2: "No, ha dimenticato il portafoglio"
+        3: "No, non è riuscito a comprare le mele perché aveva dimenticato il portafoglio"
+      scoring_criteria:
+        "correct conclusion": 1
+        "includes reason": 1
+      max_score: 2
+
+  "Livello Intermedio (B1-B2)":
+    - prompt: |
+        Leggi il seguente testo:
+        Maria lavora in un'azienda tecnologica da cinque anni. Recentemente, ha ricevuto una promozione ma sta considerando di cambiare lavoro. Il suo nuovo ruolo richiede frequenti viaggi all'estero.
+        
+        Domande:
+        1. Perché Maria potrebbe voler cambiare lavoro?
+        2. Da quanto tempo lavora nell'azienda?
+        3. Qual è il probabile svantaggio del suo nuovo ruolo?
+      acceptable_answers:
+        1: |
+          1. Per i viaggi all'estero
+          2. 5 anni
+          3. I viaggi
+        2: |
+          1. Per i frequenti viaggi all'estero
+          2. Da cinque anni
+          3. I frequenti viaggi all'estero
+        3: |
+          1. Perché il nuovo ruolo richiede frequenti viaggi all'estero
+          2. Da cinque anni nell'azienda
+          3. I frequenti viaggi all'estero richiesti dal nuovo ruolo
+      scoring_criteria:
+        "correct timeline": 1
+        "identifies motivation": 1
+        "recognizes disadvantage": 1
+      max_score: 3
+
+  "Livello Avanzato (C1-C2)":
+    - prompt: |
+        Leggi il seguente testo:
+        L'impatto della digitalizzazione sul mercato del lavoro italiano rappresenta una sfida complessa e multiforme. Da un lato, l'automazione minaccia di sostituire numerose mansioni tradizionali, dall'altro, emerge una crescente domanda di competenze digitali avanzate. Questo fenomeno sta creando un paradosso nel mercato del lavoro: mentre alcune professioni tradizionali scompaiono, molte posizioni nel settore tecnologico rimangono vacanti per mancanza di candidati qualificati. Le piccole e medie imprese, che costituiscono l'ossatura dell'economia italiana, faticano particolarmente ad adattarsi a questa trasformazione, sia per limiti finanziari che per resistenza culturale al cambiamento.
+        
+        Analizza il paradosso descritto nel testo riguardo al mercato del lavoro.
+      acceptable_answers:
+        1: "C'è un paradosso tra lavori persi e nuovi lavori tecnologici vacanti"
+        2: "Il paradosso è che mentre l'automazione elimina posti di lavoro tradizionali, si creano nuove posizioni tecnologiche che restano vuote"
+        3: "Il paradosso consiste nel fatto che mentre l'automazione elimina posti di lavoro tradizionali, contemporaneamente si creano nuove posizioni nel settore tecnologico che rimangono vacanti per mancanza di competenze"
+        4: "Il paradosso del mercato del lavoro italiano è che l'automazione elimina lavori tradizionali mentre emergono nuove posizioni nel settore tecnologico, che però restano vacanti per mancanza di competenze. Questo crea uno squilibrio tra domanda e offerta di lavoro"
+        5: "Il paradosso del mercato del lavoro italiano consiste nella simultanea perdita di posti di lavoro tradizionali a causa dell'automazione e nella creazione di nuove posizioni tecnologiche che restano vacanti per mancanza di competenze. Questo crea uno squilibrio strutturale nel mercato del lavoro, evidenziando un gap tra le competenze richieste e quelle disponibili"
+      scoring_criteria:
+        "identifies paradox": 2
+        "explains cause-effect": 2
+        "uses technical vocabulary": 1
+      max_score: 5
+
+"Conversational Skills":
+  "Livello Base (A1-A2)":
+    - prompt: "Ciao! Come stai?"
+      acceptable_answers:
+        1: "Bene"
+        2: "Sto bene, grazie"
+        3: "Sto molto bene, grazie! E tu come stai?"
+      scoring_criteria:
+        "appropriate greeting": 1
+        "complete response": 1
+        "reciprocal question": 1
+      max_score: 3
+
+    - prompt: "Sei libero stasera?"
+      acceptable_answers:
+        1: "Sì/No"
+        2: "Sì, sono libero stasera"
+        3: "Sì, sono libero stasera. Vuoi fare qualcosa insieme?"
+      scoring_criteria:
+        "direct answer": 1
+        "elaboration": 1
+        "appropriate follow-up": 1
+      max_score: 3
+
+  "Livello Intermedio (B1-B2)":
+    - prompt: "Un amico ti invita a cena ma hai già un altro impegno. Come rispondi?"
+      acceptable_answers:
+        1: "Mi dispiace, non posso"
+        2: "Mi dispiace, ma ho già un altro impegno quella sera"
+        3: "Mi dispiace tanto, ma ho già un altro impegno quella sera. Potremmo organizzare per un altro giorno la settimana prossima?"
+      scoring_criteria:
+        "polite refusal": 1
+        "explains reason": 1
+        "expresses regret": 1
+        "offers alternative": 1
+      max_score: 4
+
+  "Livello Avanzato (C1-C2)":
+    - prompt: "Scrivi un'email formale per richiedere informazioni su un corso."
+      acceptable_answers:
+        1: |
+          Gentile Signore/a,
+          Vorrei informazioni sul corso.
+          Cordiali saluti,
+          [Nome]
+        2: |
+          Gentile Signore/a,
+          Scrivo per richiedere maggiori informazioni sul corso di italiano avanzato.
+          In attesa di una Sua risposta, porgo cordiali saluti.
+          [Nome]
+        3: |
+          Gentile Signore/a,
+          Mi permetto di scriverLe in merito al corso di italiano avanzato pubblicizzato sul Vostro sito web. Sarei interessato/a a ricevere maggiori informazioni riguardo al programma didattico, agli orari delle lezioni e ai costi.
+          In attesa di un Suo gentile riscontro, porgo i miei più cordiali saluti.
+          [Nome e Cognome]
+          [Contatti]
+      scoring_criteria:
+        "formal register": 1
+        "proper structure": 1
+        "clear request": 1
+        "appropriate closing": 1
+        "correct pronouns/capitalization": 1
+      max_score: 5
+
+"Idioms & Expressions":
+  "Livello Base (A1-A2)":
+    - prompt: "Cosa significa 'in bocca al lupo'?"
+      acceptable_answers:
+        1: "Significa buona fortuna"
+        2: "È un modo per augurare buona fortuna"
+        3: "È un modo per augurare buona fortuna. La risposta corretta è 'Crepi [il lupo]!'"
+      scoring_criteria:
+        "explains meaning": 1
+        "includes response": 1
+      max_score: 2
+
+  "Livello Intermedio (B1-B2)":
+    - prompt: "Cosa significa 'avere le mani bucate'?"
+      acceptable_answers:
+        1: "Spendere troppo"
+        2: "Significa spendere troppi soldi senza controllo"
+        3: "Significa spendere troppi soldi in modo eccessivo e poco oculato, come se il denaro scivolasse via dalle mani attraverso dei buchi"
+      scoring_criteria:
+        "basic meaning": 1
+        "metaphorical explanation": 1
+        "usage context": 1
+      max_score: 3
+
+  "Livello Avanzato (C1-C2)":
+    - prompt: "Spiega il significato dell'espressione idiomatica: 'Prendere lucciole per lanterne'"
+      acceptable_answers:
+        1: "Significa confondere le cose"
+        2: "Significa scambiare una cosa per un'altra, commettendo un errore di valutazione"
+        3: "L'espressione 'prendere lucciole per lanterne' significa confondere due cose completamente diverse tra loro, commettendo un errore di valutazione grossolano"
+        4: "L'espressione 'prendere lucciole per lanterne' significa confondere due cose completamente diverse tra loro, commettendo un errore di valutazione grossolano. L'origine deriva dal confronto tra la luce debole delle lucciole e quella più forte delle lanterne"
+      scoring_criteria:
+        "basic meaning": 1
+        "detailed explanation": 1
+        "etymology": 1
+        "context of use": 1
+      max_score: 4
+
+"Cultural Competency":
+  "Livello Base (A1-A2)":
+    - prompt: "Quale festa si celebra il 25 aprile in Italia?"
+      acceptable_answers:
+        1: "La Festa della Liberazione"
+        2: "La Festa della Liberazione dall'occupazione nazifascista"
+        3: "La Festa della Liberazione, che celebra la liberazione dell'Italia dall'occupazione nazifascista e la fine della Seconda Guerra Mondiale"
+      scoring_criteria:
+        "correct holiday": 1
+        "historical significance": 1
+        "cultural context": 1
+      max_score: 3
+
+  "Livello Intermedio (B1-B2)":
+    - prompt: "Descrivi una tipica colazione italiana."
+      acceptable_answers:
+        1: "Caffè e cornetto"
+        2: "Cappuccino e cornetto al bar, o caffè e biscotti a casa"
+        3: "La colazione tipica italiana è dolce e leggera, spesso consumata al bar con un cappuccino e un cornetto (brioche). A casa, molti italiani preferiscono un caffè espresso con biscotti o fette biscottate con marmellata"
+        4: "La colazione tipica italiana è dolce e leggera, spesso consumata al bar con un cappuccino e un cornetto (brioche). A casa, molti italiani preferiscono un caffè espresso con biscotti o fette biscottate con marmellata. È molto diversa dalla colazione continentale o anglosassone"
+      scoring_criteria:
+        "typical foods": 1
+        "eating habits": 1
+        "location context": 1
+        "cultural comparison": 1
+      max_score: 4
+
+  "Livello Avanzato (C1-C2)":
+    - prompt: "Spiega il significato culturale del 'caffè sospeso' a Napoli."
+      acceptable_answers:
+        1: "È un caffè pagato per uno sconosciuto"
+        2: "È una tradizione napoletana di pagare un caffè in più per chi non può permetterselo"
+        3: "Il 'caffè sospeso' è una tradizione nata a Napoli che rappresenta un gesto di solidarietà anonima: un cliente paga due caffè ma ne consuma solo uno, lasciando il secondo 'in sospeso' per qualcuno che non può permetterselo"
+        4: "Il 'caffè sospeso' è una tradizione nata a Napoli che rappresenta un gesto di solidarietà anonima: un cliente paga due caffè ma ne consuma solo uno, lasciando il secondo 'in sospeso' per qualcuno che non può permetterselo. Questa usanza riflette i valori di generosità e supporto comunitario profondamente radicati nella cultura napoletana"
+        5: "Il 'caffè sospeso' è una tradizione nata a Napoli che rappresenta un gesto di solidarietà anonima: un cliente paga due caffè ma ne consuma solo uno, lasciando il secondo 'in sospeso' per qualcuno che non può permetterselo. Questa usanza riflette i valori di generosità e supporto comunitario profondamente radicati nella cultura napoletana, ed è diventata un simbolo di solidarietà sociale riconosciuto e praticato anche in altre parti del mondo"
+      scoring_criteria:
+        "explains practice": 1
+        "historical context": 1
+        "social significance": 1
+        "cultural values": 1
+        "regional specificity": 1
+      max_score: 5
+
+"Problem Solving":
+  "Livello Base (A1-A2)":
+    - prompt: "Come chiedi indicazioni per la stazione?"
+      acceptable_answers:
+        1: "Dov'è la stazione?"
+        2: "Scusi, può dirmi come arrivare alla stazione?"
+        3: "Mi scusi, sono un po' perso/a. Potrebbe gentilmente indicarmi la strada per arrivare alla stazione? È lontana da qui?"
+      scoring_criteria:
+        "politeness": 1
+        "clear request": 1
+        "appropriate follow-up": 1
+      max_score: 3
+        
+  "Livello Intermedio (B1-B2)":
+      - prompt: "Devi spiegare a un turista come arrivare alla stazione. Scrivi le indicazioni."
+        acceptable_answers:
+          1: "Vai dritto e gira a destra. La stazione è lì"
+          2: "Prosegua dritto per due isolati, poi giri a destra. Troverà la stazione sulla sinistra dopo circa 200 metri"
+          3: "Dal punto in cui si trova, prosegua dritto per Corso Italia per circa due isolati. Alla farmacia, giri a destra in Via Roma. Continui su questa strada per circa 200 metri: vedrà la stazione sulla sua sinistra, proprio di fronte al grande parcheggio"
+          4: "Dal punto in cui si trova, prosegua dritto per Corso Italia per circa due isolati. Alla farmacia, giri a destra in Via Roma. Continui su questa strada per circa 200 metri: vedrà la stazione sulla sua sinistra, proprio di fronte al grande parcheggio. Non può sbagliarsi, c'è una grande insegna blu. Se arriva al semaforo, significa che è andato/a troppo oltre"
+        scoring_criteria:
+          "clear sequence": 1
+          "specific landmarks": 1
+          "distance indicators": 1
+          "formal register": 1
+        max_score: 4
+
+  "Livello Avanzato (C1-C2)":
+      - prompt: "Come medieresti una discussione tra due colleghi che hanno opinioni diverse su un progetto?"
+        acceptable_answers:
+          1: "Cerchiamo di trovare un compromesso"
+          2: "Vi propongo di ascoltare entrambi i punti di vista e poi trovare una soluzione che possa soddisfare entrambi"
+          3: "Comprendo che ci siano opinioni diverse sul progetto, ed è normale quando si lavora in team. Vi propongo di affrontare la questione in modo strutturato: prima ascoltiamo entrambe le prospettive, identificando i punti di forza di ciascuna proposta"
+          4: "Comprendo che ci siano opinioni diverse sul progetto, ed è normale quando si lavora in team. Vi propongo di affrontare la questione in modo strutturato: prima ascoltiamo entrambe le prospettive, identificando i punti di forza di ciascuna proposta. Poi, possiamo fare un'analisi oggettiva dei pro e dei contro di ogni approccio, considerando tempi, costi e risultati attesi. L'obiettivo è trovare una soluzione che integri gli elementi migliori di entrambe le proposte"
+          5: "Comprendo che ci siano opinioni diverse sul progetto, ed è normale quando si lavora in team. Vi propongo di affrontare la questione in modo strutturato: prima ascoltiamo entrambe le prospettive, identificando i punti di forza di ciascuna proposta. Poi, possiamo fare un'analisi oggettiva dei pro e dei contro di ogni approccio, considerando tempi, costi e risultati attesi. L'obiettivo è trovare una soluzione che integri gli elementi migliori di entrambe le proposte per il successo del progetto. Che ne dite se iniziamo analizzando punto per punto?"
+        scoring_criteria:
+          "diplomatic approach": 1
+          "structured solution": 1
+          "active listening": 1
+          "problem-solving strategy": 1
+          "professional language": 1
+        max_score: 5
