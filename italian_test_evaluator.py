@@ -33,6 +33,7 @@ import logging
 from datetime import datetime
 from dotenv import load_dotenv
 import os
+import re
 import aiohttp
 from openai import AsyncOpenAI
 from anthropic import AsyncAnthropic
@@ -47,9 +48,52 @@ logging.basicConfig(level=logging.INFO,
                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
+NO_THINK_SYSTEM_PROMPT = (
+    "Rispondi solo alla domanda. Non spiegare il ragionamento. "
+    "Non usare tag <think>. Non aggiungere commenti."
+)
+
+RESULT_COLUMNS = [
+    'llm',
+    'section',
+    'level',
+    'prompt',
+    'response',
+    'raw_response',
+    'expected_answer',
+    'score',
+    'max_score',
+    'feedback',
+    'invalid_generation',
+    'invalid_reason',
+    'score_percentage',
+]
+
+_THINK_BLOCK_RE = re.compile(r"<think\b[^>]*>.*?</think\s*>", re.IGNORECASE | re.DOTALL)
+_THINK_CLOSE_RE = re.compile(r"</think\s*>", re.IGNORECASE)
+_THINK_OPEN_RE = re.compile(r"<think\b[^>]*>", re.IGNORECASE)
+
 def env_enabled(name: str) -> bool:
     """Return True when an optional feature flag is explicitly enabled."""
     return os.getenv(name, "").strip().lower() in ("1", "true", "yes", "on")
+
+
+def normalize_model_response(response: str) -> tuple[str, Optional[str]]:
+    """Strip hidden reasoning and detect non-evaluable thinking-only outputs."""
+    raw = (response or "").strip()
+    think_close = _THINK_CLOSE_RE.search(raw)
+    if think_close:
+        final_answer = raw[think_close.end():].strip()
+        final_answer = _THINK_BLOCK_RE.sub("", final_answer).strip()
+        if not final_answer:
+            return "", "no_final_answer_after_think"
+        return final_answer, None
+
+    if _THINK_OPEN_RE.search(raw):
+        return "", "unclosed_think_block"
+
+    cleaned = _THINK_BLOCK_RE.sub("", raw).strip()
+    return cleaned, None
 
 
 class OllamaConfig:
@@ -59,11 +103,13 @@ class OllamaConfig:
         model: str = "llama3.2:latest",
         temperature: float = 0.7,
         context_length: int = 4096,
-        num_predict: int = 128,
+        num_predict: int = 512,
         top_k: int = 40,
         top_p: float = 0.9,
         repeat_penalty: float = 1.1,
-        system_prompt: Optional[str] = None
+        system_prompt: Optional[str] = None,
+        think: Optional[bool] = None,
+        no_think_prefix: bool = False
     ):
         self.model = model
         self.temperature = temperature
@@ -73,6 +119,8 @@ class OllamaConfig:
         self.top_p = top_p
         self.repeat_penalty = repeat_penalty
         self.system_prompt = system_prompt
+        self.think = think
+        self.no_think_prefix = no_think_prefix
 
     def to_dict(self) -> Dict:
         """Convert config to Ollama API format."""
@@ -89,6 +137,8 @@ class OllamaConfig:
         }
         if self.system_prompt:
             config["system"] = self.system_prompt
+        if self.think is not None:
+            config["think"] = self.think
         return config
 
 class ItalianTestData:
@@ -336,8 +386,9 @@ Rispondi SOLO con il JSON, senza altro testo."""
         if model_name not in self.ollama_configs:
             raise ValueError(f"Unsupported Ollama model: {model_name}")
         
-        config = self.ollama_configs[model_name].to_dict()
-        config["prompt"] = prompt
+        ollama_config = self.ollama_configs[model_name]
+        config = ollama_config.to_dict()
+        config["prompt"] = f"/no_think\n{prompt}" if ollama_config.no_think_prefix else prompt
         config["stream"] = False
         
         try:
@@ -388,7 +439,26 @@ class TestRunner:
         
         for prompt_data in prompts:
             try:
-                response = await query_func(prompt_data['prompt'])
+                raw_response = await query_func(prompt_data['prompt'])
+                response, invalid_reason = normalize_model_response(raw_response)
+                if invalid_reason:
+                    self.results.append({
+                        'llm': llm_name,
+                        'section': prompt_data['section'],
+                        'level': prompt_data['level'],
+                        'prompt': prompt_data['prompt'],
+                        'response': response,
+                        'raw_response': raw_response,
+                        'expected_answer': prompt_data.get('acceptable_answers', {}),
+                        'score': 0,
+                        'max_score': prompt_data['max_score'],
+                        'feedback': f"Invalid generation: {invalid_reason}",
+                        'invalid_generation': True,
+                        'invalid_reason': invalid_reason,
+                        'score_breakdown': {'invalid_generation': True}
+                    })
+                    continue
+
                 score_data = await self.evaluator.calculate_score(response, prompt_data)
                 
                 self.results.append({
@@ -397,10 +467,13 @@ class TestRunner:
                     'level': prompt_data['level'],
                     'prompt': prompt_data['prompt'],
                     'response': response,
+                    'raw_response': raw_response,
                     'expected_answer': prompt_data.get('acceptable_answers', {}),
                     'score': score_data['score'],
                     'max_score': score_data['max_score'],
                     'feedback': score_data['feedback'],
+                    'invalid_generation': False,
+                    'invalid_reason': '',
                     'score_breakdown': score_data.get('breakdown', {})
                 })
                 
@@ -414,18 +487,7 @@ class TestRunner:
         """Convert results to pandas DataFrame with enhanced scoring details."""
         df = pd.DataFrame(self.results)
         if df.empty:
-            return pd.DataFrame(columns=[
-                'llm',
-                'section',
-                'level',
-                'prompt',
-                'response',
-                'expected_answer',
-                'score',
-                'max_score',
-                'feedback',
-                'score_percentage',
-            ])
+            return pd.DataFrame(columns=RESULT_COLUMNS)
         
         # Add score percentage column
         df['score_percentage'] = (df['score'] / df['max_score'] * 100).round(2)
@@ -519,7 +581,10 @@ async def main():
             model="qwen3:14b",
             temperature=0.7,
             context_length=8192,
-            system_prompt="Sei un esperto della lingua italiana, specializzato in grammatica, vocabolario e conoscenza culturale. Fornisci risposte concise e accurate, senza spiegazioni o contesto aggiuntivo.."
+            num_predict=512,
+            system_prompt=NO_THINK_SYSTEM_PROMPT,
+            think=False,
+            no_think_prefix=True
         ),
     }
     
