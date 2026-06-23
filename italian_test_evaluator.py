@@ -47,6 +47,11 @@ logging.basicConfig(level=logging.INFO,
                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
+def env_enabled(name: str) -> bool:
+    """Return True when an optional feature flag is explicitly enabled."""
+    return os.getenv(name, "").strip().lower() in ("1", "true", "yes", "on")
+
+
 class OllamaConfig:
     """Configuration class for Ollama models."""
     def __init__(
@@ -408,6 +413,19 @@ class TestRunner:
     def get_results_dataframe(self) -> pd.DataFrame:
         """Convert results to pandas DataFrame with enhanced scoring details."""
         df = pd.DataFrame(self.results)
+        if df.empty:
+            return pd.DataFrame(columns=[
+                'llm',
+                'section',
+                'level',
+                'prompt',
+                'response',
+                'expected_answer',
+                'score',
+                'max_score',
+                'feedback',
+                'score_percentage',
+            ])
         
         # Add score percentage column
         df['score_percentage'] = (df['score'] / df['max_score'] * 100).round(2)
@@ -428,6 +446,9 @@ class TestRunner:
         # Save detailed results
         df = self.get_results_dataframe()
         df.to_csv(output_path / f"detailed_results_{timestamp}.csv", index=False)
+        if df.empty:
+            logger.warning("No successful results to summarize; wrote empty detailed results file.")
+            return
         
         # Generate and save summary by section and level
         summary = df.groupby(['llm', 'section', 'level']).agg({
@@ -494,6 +515,12 @@ async def main():
             system_prompt="Sei un esperto della lingua italiana, specializzato in grammatica, vocabolario e conoscenza culturale. Fornisci risposte concise e accurate, senza spiegazioni o contesto aggiuntivo.."
 
         ),
+        "qwen3:14b": OllamaConfig(
+            model="qwen3:14b",
+            temperature=0.7,
+            context_length=8192,
+            system_prompt="Sei un esperto della lingua italiana, specializzato in grammatica, vocabolario e conoscenza culturale. Fornisci risposte concise e accurate, senza spiegazioni o contesto aggiuntivo.."
+        ),
     }
     
     evaluator = LLMEvaluator(
@@ -516,13 +543,13 @@ async def main():
     # Add API-based models if keys are available
     if api_keys.get("anthropic"):
         models.append(("claude", evaluator.query_anthropic))
-    if api_keys.get("openai"):
+    if api_keys.get("openai") and env_enabled("RUN_CHATGPT_TEST"):
         models.append(("chatgpt", evaluator.query_openai))
     if api_keys.get("deepseek"):
         models.append(("deepseek", evaluator.query_deepseek))
     
     # Add available Ollama models
-    ollama_model_names = ["llama3.2:latest", "mistral:latest", "qwen2.5:latest", "phi4:latest"]
+    ollama_model_names = ["qwen3:14b"] #, "mistral:latest", "qwen2.5:latest", "phi4:latest"]
     for model_name in ollama_model_names:
         if model_name in available_models:
             models.append(
@@ -544,7 +571,6 @@ async def main():
             logger.info(f"Completed testing {model_name}")
         except Exception as e:
             logger.error(f"Error running tests for {model_name}: {str(e)}")
-            logger.error(f"Prompt Data: {json.dumps(prompt_data, indent=2, ensure_ascii=False)}")  # Log the full structure
             continue
     
     # Save all results
